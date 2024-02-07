@@ -30,7 +30,7 @@ app.post("/signup", async (req, res) => {
   try {
     const userData = req.body;
     const user = await signup(userData);
-    
+
     res.status(201).json({
       message: "Client Registered",
       user,
@@ -142,6 +142,33 @@ async function updateConversations(email, conversations) {
     const updatedUser = await user.save();
 
     return updatedUser;
+  } catch (error) {
+    throw error;
+  }
+}
+
+// Get User
+
+app.get("/get-user", async (req, res) => {
+  try {
+    const { email } = req.body;
+    const user = await getUser(email);
+    res.status(200).json({
+      message: "User Fetched",
+      user,
+    });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+async function getUser(email) {
+  try {
+    const user = await Client.findOne({ email: email });
+
+    if(!user) throw new Error("User Not Found");
+    
+    return user;
   } catch (error) {
     throw error;
   }
