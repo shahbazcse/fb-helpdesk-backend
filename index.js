@@ -149,7 +149,7 @@ async function updateConversations(email, conversations) {
 
 // Get User
 
-app.get("/get-user", async (req, res) => {
+app.post("/get-user", async (req, res) => {
   try {
     const { email } = req.body;
     console.log("Reached 1", req);
