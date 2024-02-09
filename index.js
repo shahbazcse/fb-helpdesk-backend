@@ -224,7 +224,6 @@ app.post('/webhook', (req, res) => {
 
   // Checks this is an event from a page subscription
   if (body.object === 'page') {
-    console.log("BODY", body.entry);
 
     // Iterates over each entry - there may be multiple if batched
     body.entry.forEach(function (entry) {
@@ -239,9 +238,7 @@ app.post('/webhook', (req, res) => {
       let PSID = body.entry[0].messaging[0].id;
       let messageText = body.entry[0].messaging[0].message;
 
-      console.log(page_id, page_access_token, PSID, messageText);
-
-      // sendMessage(page_id, page_access_token, PSID, messageText);
+      sendMessage(page_id, page_access_token, PSID, messageText);
 
     });
 
