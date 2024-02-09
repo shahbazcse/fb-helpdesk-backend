@@ -168,7 +168,7 @@ async function getUser(email) {
     const user = await Client.findOne({ email: email });
 
     if (!user) throw new Error("User Not Found");
-    console.log("Reached 1", user);
+    console.log("Reached 2", user);
     return user;
   } catch (error) {
     throw error;
