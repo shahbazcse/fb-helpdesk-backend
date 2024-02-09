@@ -165,10 +165,10 @@ app.get("/get-user", async (req, res) => {
 
 async function getUser(email) {
   try {
+    console.log("Reached 2", user);
     const user = await Client.findOne({ email: email });
 
     if (!user) throw new Error("User Not Found");
-    console.log("Reached 2", user);
     return user;
   } catch (error) {
     throw error;
