@@ -236,7 +236,7 @@ app.post('/webhook', (req, res) => {
 
       let page_id = body.entry[0].id
       let page_access_token = body.entry[0].page_access_token;
-      let PSID = body.entry[0].messaging[0].sender.id;
+      let PSID = body.entry[0].messaging[0].id;
       let messageText = body.entry[0].messaging[0].message;
 
       console.log(page_id, page_access_token, PSID, messageText);
