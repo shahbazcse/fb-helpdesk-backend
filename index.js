@@ -152,7 +152,7 @@ async function updateConversations(email, conversations) {
 app.get("/get-user", async (req, res) => {
   try {
     const { email } = req.body;
-    console.log("Reached 1", email);
+    console.log("Reached 1", req);
     const user = await getUser(email);
     res.status(200).json({
       message: "User Fetched",
