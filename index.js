@@ -152,6 +152,7 @@ async function updateConversations(email, conversations) {
 app.get("/get-user", async (req, res) => {
   try {
     const { email } = req.body;
+    console.log("Reached 1", email);
     const user = await getUser(email);
     res.status(200).json({
       message: "User Fetched",
@@ -167,7 +168,7 @@ async function getUser(email) {
     const user = await Client.findOne({ email: email });
 
     if (!user) throw new Error("User Not Found");
-
+    console.log("Reached 1", user);
     return user;
   } catch (error) {
     throw error;
