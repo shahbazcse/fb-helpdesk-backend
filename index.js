@@ -174,36 +174,33 @@ async function getUser(email) {
   }
 }
 
-// // Send Message
-// async function sendMessage(PSID, messageText) {
-//   // Construct the message body
-//   const data = {
-//     recipient: {
-//       id: PSID
-//     },
-//     messaging_type: "RESPONSE",
-//     message: {
-//       text: messageText
-//     }
-//   };
+// Send Message
+async function sendMessage(page_id, page_access_token, PSID, messageText) {
+  // Construct the message body
+  const data = {
+    recipient: {
+      id: PSID
+    },
+    messaging_type: "RESPONSE",
+    message: {
+      text: messageText
+    }
+  };
 
-//   const config = {
-//     headers: {
-//       'Content-Type': 'application/json'
-//     }
-//   };
+  const config = {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  };
 
-//   const page_id = process.env.PAGE_ID;
-//   const page_access_token = process.env.page_access_token;
-
-//   // Send the HTTP request to the Messenger Platform
-//   const res = await axios.post(`https://graph.facebook.com/v19.0/${page_id}/messages?access_token=${page_access_token}`, data, config);
-//   if (res && !res.error) {
-//     console.log('message sent!');
-//   } else {
-//     console.error("Unable to send message:" + err);
-//   }
-// }
+  // Send the HTTP request to the Messenger Platform
+  const res = await axios.post(`https://graph.facebook.com/v19.0/${page_id}/messages?access_token=${page_access_token}`, data, config);
+  if (res && !res.error) {
+    console.log('Message sent!');
+  } else {
+    console.error("Unable to send message:" + err);
+  }
+}
 
 // Webhook verify
 app.get('/webhook', (req, res) => {
@@ -227,6 +224,7 @@ app.post('/webhook', (req, res) => {
 
   // Checks this is an event from a page subscription
   if (body.object === 'page') {
+    console.log("BODY", body.entry);
 
     // Iterates over each entry - there may be multiple if batched
     body.entry.forEach(function (entry) {
@@ -235,6 +233,16 @@ app.post('/webhook', (req, res) => {
       // will only ever contain one message, so we get index 0
       let webhook_event = entry.messaging[0];
       console.log(webhook_event);
+
+      let page_id = body.entry[0].id
+      let page_access_token = body.entry[0].page_access_token;
+      let PSID = body.entry[0].messaging[0].sender.id;
+      let messageText = body.entry[0].messaging[0].message.text;
+
+      console.log(page_id, page_access_token, PSID, messageText);
+
+      // sendMessage(page_id, page_access_token, PSID, messageText);
+
     });
 
     // Returns a '200 OK' response to all requests
