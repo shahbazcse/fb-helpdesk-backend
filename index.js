@@ -166,10 +166,81 @@ async function getUser(email) {
   try {
     const user = await Client.findOne({ email: email });
 
-    if(!user) throw new Error("User Not Found");
-    
+    if (!user) throw new Error("User Not Found");
+
     return user;
   } catch (error) {
     throw error;
   }
 }
+
+// // Send Message
+// async function sendMessage(PSID, messageText) {
+//   // Construct the message body
+//   const data = {
+//     recipient: {
+//       id: PSID
+//     },
+//     messaging_type: "RESPONSE",
+//     message: {
+//       text: messageText
+//     }
+//   };
+
+//   const config = {
+//     headers: {
+//       'Content-Type': 'application/json'
+//     }
+//   };
+
+//   const page_id = process.env.PAGE_ID;
+//   const page_access_token = process.env.page_access_token;
+
+//   // Send the HTTP request to the Messenger Platform
+//   const res = await axios.post(`https://graph.facebook.com/v19.0/${page_id}/messages?access_token=${page_access_token}`, data, config);
+//   if (res && !res.error) {
+//     console.log('message sent!');
+//   } else {
+//     console.error("Unable to send message:" + err);
+//   }
+// }
+
+// Webhook verify
+app.get('/webhook', (req, res) => {
+  let mode = req.query['hub.mode'];
+  let token = req.query['hub.verify_token'];
+  let challenge = req.query['hub.challenge'];
+  if (mode && token) {
+    if (mode === 'subscribe' && token === process.env.VERIFY_TOKEN) {
+      console.log('WEBHOOK_VERIFIED');
+      res.status(200).send(challenge);
+    } else {
+      res.sendStatus(403);
+    }
+  }
+});
+
+// webhook
+app.post("/webhook", (req, res) => {
+  let body = req.body;
+
+  // Checks this is an event from a page subscription
+  if (body.object === 'page') {
+    // body.entry.forEach(function (entry) {
+    //   // Gets the body of the webhook event
+    //   let webhook_event = entry.messaging[0];
+    //   console.log(webhook_event);
+
+    //   // Get the sender PSID
+    //   let sender_psid = webhook_event.sender.id;
+    //   if (webhook_event.message) {
+    //     return 1;
+    //   }
+    // });
+    // Returns a '200 OK' response to all requests
+    res.status(200).send('EVENT_RECEIVED');
+  } else {
+    // Returns a '404 Not Found' if event is not from a page subscription
+    res.sendStatus(404);
+  }
+});
